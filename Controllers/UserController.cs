@@ -25,7 +25,7 @@ namespace NETFinalProject.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            //_context.Database.EnsureCreated();
+            _context.Database.EnsureCreated();
             var users = await _context.Users.ToListAsync();
             return Ok(users);
         }
@@ -49,38 +49,6 @@ namespace NETFinalProject.Controllers
         [HttpPost("{userId}/AddIncome")]
         public async Task<IActionResult> AddIncome(int userId, [FromBody] Income income)
         {
-            //var user = await _context.Users.FindAsync(userId);
-
-            //var user = await _context.Users
-            //    .Include(u => u.FinancialSummary)
-            //    .FirstOrDefaultAsync(u => u.UserId == userId);
-
-            //if (user == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //if (user.FinancialSummary == null)
-            //{
-            //    user.FinancialSummary = new FinancialSummary();
-            //}
-
-            //// Add the income to the FinancialSummary
-            //user.FinancialSummary.AddIncome(income);
-
-            ////// Detach the user entity from the context
-            ////_context.Entry(user).State = EntityState.Detached;
-
-            ////_context.Attach(income);
-            ////await _context.SaveChangesAsync();
-
-            //// Update the financial summary in the database context
-            //_context.Update(user.FinancialSummary);
-
-            //await _context.SaveChangesAsync();
-
-            //return Ok(user.FinancialSummary);
-
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
                 .FirstOrDefaultAsync(u => u.UserId == userId);
@@ -89,6 +57,7 @@ namespace NETFinalProject.Controllers
                 return NotFound();
             }
             user.FinancialSummary ??= new FinancialSummary();
+
             user.FinancialSummary.AddIncome(income);
             await _context.SaveChangesAsync();
             return Ok(user.FinancialSummary);
@@ -98,36 +67,6 @@ namespace NETFinalProject.Controllers
         [HttpPost("{userId}/AddExpense")]
         public async Task<IActionResult> AddExpense(int userId, [FromBody] Expense expense)
         {
-            //var user = await _context.Users
-            //    .Include(u => u.FinancialSummary)
-            //    .FirstOrDefaultAsync(u => u.UserId == userId);
-            ////var user = await _context.Users.FindAsync(userId);
-
-            //if (user == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //if (user.FinancialSummary == null)
-            //{
-            //    user.FinancialSummary = new FinancialSummary();
-            //}
-
-            //user.FinancialSummary.AddExpense(expense);
-
-            //// Detach the user entity from the context
-            ////_context.Entry(user).State = EntityState.Detached;
-
-            ////_context.Attach(expense);
-            ////await _context.SaveChangesAsync();
-
-            //// Update the financial summary in the database context
-            //_context.Update(user.FinancialSummary);
-
-            ////await _context.SaveChangesAsync();
-
-            //return Ok(user.FinancialSummary);
-
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
                 .FirstOrDefaultAsync(u => u.UserId == userId);
@@ -145,39 +84,6 @@ namespace NETFinalProject.Controllers
         [HttpGet("{userId}/GetCurrentBalance")]
         public async Task<ActionResult<User>> GetCurrentBalance(int userId)
         {
-            ////var user = await _context.Users.FindAsync(userId);
-
-            //var user = await _context.Users
-            //    .Include(u => u.FinancialSummary)
-            //    .FirstOrDefaultAsync(u => u.UserId == userId);
-
-            ////if (user == null || user.FinancialSummary == null)
-            ////{
-            ////    return NotFound();
-            ////}
-
-
-            ////// Log total income and total expense
-            //Console.WriteLine($"Total Income: {user.FinancialSummary.TotalIncome}");
-            //Console.WriteLine($"Total Expense: {user.FinancialSummary.TotalExpense}");
-
-            //// Calculate totals to ensure current balance is up to date
-            //user.FinancialSummary.CalculateTotals();
-
-            //// Log current balance
-            //Console.WriteLine($"Current Balance: {user.FinancialSummary.CurrentBalance}");
-
-            //var currentBalance = user.FinancialSummary.GetCurrentBalance();
-
-
-
-            //// Calculate the current balance
-            ////var totalIncome = _context.Incomes.Where(i => i.UserId == userId).Sum(a => a.Amount);
-            ////var totalExpense = _context.Expenses.Where(i => i.UserId == userId).Sum(a => a.Amount);
-            ////var currentBalance = totalIncome - totalExpense;
-
-            //return Ok(currentBalance);
-
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
                 .FirstOrDefaultAsync(u => u.UserId == userId);
@@ -193,31 +99,6 @@ namespace NETFinalProject.Controllers
         [HttpGet("{userId}/GetBalanceForDateRange")]
         public async Task<ActionResult<User>> GetBalanceForDateRange(int userId, DateTime startDate, DateTime endDate)
         {
-            //var user = await _context.Users.FindAsync(userId);
-
-            //var user = await _context.Users
-            //    .Include(u => u.FinancialSummary)
-            //    .ThenInclude(fs => fs.Incomes)
-            //    .Include(u => u.FinancialSummary)
-            //    .ThenInclude(fs => fs.Expenses)
-            //    .FirstOrDefaultAsync(u => u.UserId == userId);
-
-            //if (user == null)
-            //{
-            //    return NotFound();
-            //}
-
-            ////if (user.FinancialSummary == null)
-            ////{
-            ////    user.FinancialSummary = new FinancialSummary();
-            ////}
-
-            //var dateRangeBalance = user.FinancialSummary.GetBalanceForDateRange(startDate, endDate);
-
-            //return Ok(dateRangeBalance);
-
-            
-
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
                 .FirstOrDefaultAsync(u => u.UserId == userId);
@@ -257,7 +138,8 @@ namespace NETFinalProject.Controllers
                 }
             }
 
-            return NoContent();
+            //return NoContent();
+            return Ok(user);
         }
 
         // POST: api/User

@@ -27,22 +27,22 @@ namespace NETFinalProject.Data
                     fs.Property<decimal>("TotalIncome").HasColumnType("decimal(18,2)");
                     fs.Property<decimal>("TotalExpense").HasColumnType("decimal(18,2)");
 
-                    fs.Ignore(f => f.Incomes);
-                    fs.Ignore(f => f.Expenses);
+                    //fs.Ignore(f => f.Incomes);
+                    //fs.Ignore(f => f.Expenses);
 
-                    //        fs.OwnsMany(f => f.Incomes, income =>
-                    //        {
-                    //            income.WithOwner().HasForeignKey("UserId"); // Configure as owned property
-                    //            income.ToTable("Incomes"); // Specify the name of the table for Incomes if needed
-                    //            income.Property<decimal>("Amount").HasColumnType("decimal(18,2)");
-                    //        });
+                    fs.OwnsMany(f => f.Incomes, income =>
+                    {
+                        income.WithOwner().HasForeignKey("UserId"); // Configure as owned property
+                        income.ToTable("Incomes"); // Specify the name of the table for Incomes if needed
+                        income.Property<decimal>("Amount").HasColumnType("decimal(18,2)");
+                    });
 
-                    //        fs.OwnsMany(f => f.Expenses, expense =>
-                    //        {
-                    //            expense.WithOwner().HasForeignKey("UserId"); // Configure as owned property
-                    //            expense.ToTable("Expenses"); // Specify the name of the table for Expenses if needed
-                    //            expense.Property<decimal>("Amount").HasColumnType("decimal(18,2)");
-                    //        });
+                    fs.OwnsMany(f => f.Expenses, expense =>
+                    {
+                        expense.WithOwner().HasForeignKey("UserId"); // Configure as owned property
+                        expense.ToTable("Expenses"); // Specify the name of the table for Expenses if needed
+                        expense.Property<decimal>("Amount").HasColumnType("decimal(18,2)");
+                    });
                 });
 
 
@@ -70,13 +70,13 @@ namespace NETFinalProject.Data
             modelBuilder.Entity<User>().HasData(userList);
 
             // Explicitly specifies SQL server column types for Amount properties in Expense and Income entities
-            modelBuilder.Entity<Expense>()
-                .Property(e => e.Amount)
-                .HasColumnType("decimal(18,2)");
+            //modelBuilder.Entity<Expense>()
+            //    .Property(e => e.Amount)
+            //    .HasColumnType("decimal(18,2)");
 
-            modelBuilder.Entity<Income>()
-                .Property(e => e.Amount)
-                .HasColumnType("decimal(18,2)");
+            //modelBuilder.Entity<Income>()
+            //    .Property(e => e.Amount)
+            //    .HasColumnType("decimal(18,2)");
 
             //base.OnModelCreating(modelBuilder);
         }

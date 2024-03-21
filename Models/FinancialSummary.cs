@@ -11,16 +11,12 @@ namespace NETFinalProject.Models
         public decimal TotalExpense { get; set; }
         public decimal CurrentBalance => TotalIncome - TotalExpense;
 
-        //public DateTime StartDate { get; set; }
-        //public DateTime EndDate { get; set; }
-
         public virtual List<Income> Incomes { get; set; } = new List<Income>();
         public virtual List<Expense> Expenses { get; set; } = new List<Expense>();
 
 
         public decimal GetCurrentBalance()
         {
-            //CalculateTotals();
             return CurrentBalance;
         }
 
@@ -32,23 +28,15 @@ namespace NETFinalProject.Models
             return incomesInRange.Sum(i => i.Amount) - expensesInRange.Sum(e => e.Amount);
         }
 
-        //public void CalculateTotals()
-        //{
-        //    TotalIncome = Incomes.Sum(i => i.Amount);
-        //    TotalExpense = Expenses.Sum(e => e.Amount);
-        //}
-
         public void AddIncome(Income income)
         {
             Incomes.Add(income);
-            //CalculateTotals();
             TotalIncome += income.Amount;
         }
 
         public void AddExpense(Expense expense)
         {
             Expenses.Add(expense);
-            //CalculateTotals();
             TotalExpense += expense.Amount;
         }
     }
