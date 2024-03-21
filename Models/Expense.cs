@@ -6,6 +6,7 @@ namespace NETFinalProject.Models
 {
     public class Expense
     {
+        [Key]
         public int ExpenseId { get; set; }
 
         [Required(ErrorMessage = "Expense category is required.")]
@@ -22,7 +23,7 @@ namespace NETFinalProject.Models
         [Display(Name = "Date Incurred")]
         public DateTime DateIncurred { get; set; }
         
-        public int UserId { get; set; }
+        public int Id { get; set; }
 
         public override string ToString()
         {

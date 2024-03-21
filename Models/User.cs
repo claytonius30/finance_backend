@@ -4,9 +4,9 @@ using System.Numerics;
 
 namespace NETFinalProject.Models
 {
-    public class User
+    public class User : IdentityUser<int>
     {
-        public int UserId { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "First name is required.")]
         [StringLength(255)]
@@ -22,7 +22,7 @@ namespace NETFinalProject.Models
 
         public override string ToString()
         {
-            return $"ID: {UserId}, Name: {FirstName} {LastName}";
+            return $"ID: {Id}, Name: {FirstName} {LastName}";
         }
     }
 }

@@ -51,7 +51,7 @@ namespace NETFinalProject.Controllers
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
-                .FirstOrDefaultAsync(u => u.UserId == userId);
+                .FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
                 return NotFound();
@@ -69,7 +69,7 @@ namespace NETFinalProject.Controllers
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
-                .FirstOrDefaultAsync(u => u.UserId == userId);
+                .FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace NETFinalProject.Controllers
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
-                .FirstOrDefaultAsync(u => u.UserId == userId);
+                .FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null || user.FinancialSummary == null)
             {
                 return NotFound();
@@ -101,7 +101,7 @@ namespace NETFinalProject.Controllers
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
-                .FirstOrDefaultAsync(u => u.UserId == userId);
+                .FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null || user.FinancialSummary == null)
             {
                 return NotFound();
@@ -115,7 +115,7 @@ namespace NETFinalProject.Controllers
         [HttpPut("{userId}")]
         public async Task<IActionResult> PutUser(int userId, User user)
         {
-            if (userId != user.UserId)
+            if (userId != user.Id)
             {
                 return BadRequest();
             }
@@ -150,7 +150,7 @@ namespace NETFinalProject.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUser), new { userId = user.UserId }, user);
+            return CreatedAtAction(nameof(GetUser), new { userId = user.Id }, user);
         }
 
         // DELETE: api/User/5
@@ -171,7 +171,7 @@ namespace NETFinalProject.Controllers
 
         private bool UserExists(int userId)
         {
-            return _context.Users.Any(e => e.UserId == userId);
+            return _context.Users.Any(e => e.Id == userId);
         }
     }
 }

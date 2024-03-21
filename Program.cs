@@ -12,16 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<FinanceContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<FinanceContext>();
-
-
-//builder.Services.AddIdentity<User, IdentityRole>(options =>
-//{
-//    // Configure identity options here
-//})
-//    .AddEntityFrameworkStores<FinanceContext>()
-//    .AddDefaultTokenProviders();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -6,6 +6,7 @@ namespace NETFinalProject.Models
 {
     public class Income
     {
+        [Key]
         public int IncomeId { get; set; }
 
         [Required(ErrorMessage = "Income source is required.")]
@@ -22,7 +23,7 @@ namespace NETFinalProject.Models
         [Display(Name = "Date Received")]
         public DateTime DateReceived { get; set; }
         
-        public int UserId { get; set; }
+        public int Id { get; set; }
 
         public override string ToString()
         {

@@ -6,14 +6,12 @@ namespace NETFinalProject.Models
 {
     public class FinancialSummary
     {
-        //public virtual User User { get; set; }
         public decimal TotalIncome { get; set; }
         public decimal TotalExpense { get; set; }
         public decimal CurrentBalance => TotalIncome - TotalExpense;
 
         public virtual List<Income> Incomes { get; set; } = new List<Income>();
         public virtual List<Expense> Expenses { get; set; } = new List<Expense>();
-
 
         public decimal GetCurrentBalance()
         {
