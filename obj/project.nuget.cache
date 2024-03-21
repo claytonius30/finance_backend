@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "DkmKC67jx0dJfLPNzGpTYzdPZtwqg33zUkmdHVBG4c5olEQfexG5RGQRC0TECbZr6RDCSelRks0BbIMMKvsS9Q==",
+  "dgSpecHash": "Aa9RB5jyPIpaaS8atcZWyIOWbXVotQV2XGiE8C5R/rk2/lIOGPVD5CYV5r1iZgRaFumsojoN2xWdG6ABYXGbeg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\14064\\School Material\\Web Services\\NETFinalProject\\NETFinalProject.csproj",
+  "projectFilePath": "C:\\gitrepos\\WebServicesFinal\\NETFinalProject.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\14064\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\14064\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

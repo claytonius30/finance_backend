@@ -9028,11 +9028,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\14064\\School Material\\Web Services\\NETFinalProject\\NETFinalProject.csproj",
+      "projectUniqueName": "C:\\gitrepos\\WebServicesFinal\\NETFinalProject.csproj",
       "projectName": "NETFinalProject",
-      "projectPath": "C:\\Users\\14064\\School Material\\Web Services\\NETFinalProject\\NETFinalProject.csproj",
+      "projectPath": "C:\\gitrepos\\WebServicesFinal\\NETFinalProject.csproj",
       "packagesPath": "C:\\Users\\14064\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\14064\\School Material\\Web Services\\NETFinalProject\\obj\\",
+      "outputPath": "C:\\gitrepos\\WebServicesFinal\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
