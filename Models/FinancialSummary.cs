@@ -6,8 +6,8 @@ namespace NETFinalProject.Models
 {
     public class FinancialSummary
     {
-        public decimal TotalIncome { get; set; }
-        public decimal TotalExpense { get; set; }
+        public decimal TotalIncome { get; set; } = decimal.Zero;
+        public decimal TotalExpense { get; set; } = decimal.Zero;
         public decimal CurrentBalance => TotalIncome - TotalExpense;
 
         public virtual List<Income> Incomes { get; set; } = new List<Income>();

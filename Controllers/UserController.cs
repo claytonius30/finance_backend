@@ -80,6 +80,42 @@ namespace NETFinalProject.Controllers
             return Ok(user.FinancialSummary);
         }
 
+        // GET: api/User/{userId}/GetIncomes
+        [HttpGet("{userId}/GetIncomes")]
+        public async Task<ActionResult<IEnumerable<Income>>> GetIncomes(int userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Incomes)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var incomes = user.FinancialSummary.Incomes;
+            return Ok(incomes);
+        }
+
+        // GET: api/User/{userId}/GetExpenses
+        [HttpGet("{userId}/GetExpenses")]
+        public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses(int userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Expenses)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var expenses = user.FinancialSummary.Expenses;
+            return Ok(expenses);
+        }
+
         // GET: api/User/{userId}/GetCurrentBalance
         [HttpGet("{userId}/GetCurrentBalance")]
         public async Task<ActionResult<User>> GetCurrentBalance(int userId)
@@ -108,6 +144,20 @@ namespace NETFinalProject.Controllers
             }
             var dateRangeBalance = user.FinancialSummary.GetBalanceForDateRange(startDate, endDate);
             return Ok(dateRangeBalance);
+        }
+
+        // GET: api/User/{userId}/CheckFinancialSummary
+        [HttpGet("{userId}/CheckFinancialSummary")]
+        public async Task<bool> CheckFinancialSummary(int userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+            if (user.FinancialSummary == null)
+            {
+                return false;
+            }
+            return true;
         }
 
         // PUT: api/User/5
