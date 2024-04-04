@@ -30,7 +30,7 @@ namespace NETFinalProject.Controllers
             return Ok(users);
         }
 
-        // GET: api/User/5
+        // GET: api/User/{userId}
         [HttpGet("{userId}")]
         public async Task<ActionResult<User>> GetUser(int userId)
         {
@@ -43,6 +43,67 @@ namespace NETFinalProject.Controllers
             }
 
             return Ok(user);
+        }
+
+        // GET: api/User/{userId}/GetIncomes
+        [HttpGet("{userId}/GetIncomes")]
+        public async Task<ActionResult<IEnumerable<Income>>> GetIncomes(int userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Incomes)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var incomes = user.FinancialSummary.Incomes.OrderByDescending(i => i.DateReceived);
+            return Ok(incomes);
+        }
+
+        // GET: api/User/{userId}/GetIncomesForDateRange
+        [HttpGet("{userId}/GetIncomesForDateRange")]
+        public async Task<ActionResult<IEnumerable<Income>>> GetIncomesForDateRange(int userId, DateTime startDate, DateTime endDate)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Incomes)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var incomes = user.FinancialSummary.Incomes
+                .Where(i => i.DateReceived >= startDate && i.DateReceived <= endDate)
+                .OrderByDescending(i => i.DateReceived);
+            return Ok(incomes);
+        }
+
+        // GET: api/User/{userId}/GetIncome/{incomeId}
+        [HttpGet("{userId}/GetIncome/{incomeId}")]
+        public async Task<ActionResult<User>> GetIncome(int userId, int incomeId)
+        {
+            var user = await _context.Users
+            .Include(u => u.FinancialSummary)
+                .ThenInclude(fs => fs.Incomes)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var income = user.FinancialSummary.Incomes.FirstOrDefault(i => i.IncomeId == incomeId);
+            if (income == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(income);
         }
 
         // POST: api/User/{userId}/AddIncome
@@ -60,30 +121,18 @@ namespace NETFinalProject.Controllers
 
             user.FinancialSummary.AddIncome(income);
             await _context.SaveChangesAsync();
-            return Ok(user.FinancialSummary);
+            return Ok(income);
         }
 
-        // POST: api/User/{userId}/AddExpense
-        [HttpPost("{userId}/AddExpense")]
-        public async Task<IActionResult> AddExpense(int userId, [FromBody] Expense expense)
+        // PUT: api/User/{userId}/UpdateIncome/{incomeId}
+        [HttpPut("{userId}/UpdateIncome/{incomeId}")]
+        public async Task<IActionResult> UpdateIncome(int userId, int incomeId, Income updatedIncome)
         {
-            var user = await _context.Users
-                .Include(u => u.FinancialSummary)
-                .FirstOrDefaultAsync(u => u.Id == userId);
-            if (user == null)
+            if (incomeId != updatedIncome.IncomeId || userId != updatedIncome.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
-            user.FinancialSummary ??= new FinancialSummary();
-            user.FinancialSummary.AddExpense(expense);
-            await _context.SaveChangesAsync();
-            return Ok(user.FinancialSummary);
-        }
 
-        // GET: api/User/{userId}/GetIncomes
-        [HttpGet("{userId}/GetIncomes")]
-        public async Task<ActionResult<IEnumerable<Income>>> GetIncomes(int userId)
-        {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
                     .ThenInclude(fs => fs.Incomes)
@@ -94,8 +143,33 @@ namespace NETFinalProject.Controllers
                 return NotFound();
             }
 
-            var incomes = user.FinancialSummary.Incomes;
-            return Ok(incomes);
+            var incomeToUpdate = user.FinancialSummary.Incomes.FirstOrDefault(i => i.IncomeId == incomeId);
+            if (incomeToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            incomeToUpdate.Amount = updatedIncome.Amount;
+            incomeToUpdate.Source = updatedIncome.Source;
+            incomeToUpdate.DateReceived = updatedIncome.DateReceived;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(userId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok(incomeToUpdate);
         }
 
         // GET: api/User/{userId}/GetExpenses
@@ -112,8 +186,116 @@ namespace NETFinalProject.Controllers
                 return NotFound();
             }
 
-            var expenses = user.FinancialSummary.Expenses;
+            var expenses = user.FinancialSummary.Expenses.OrderByDescending(i => i.DateIncurred);
             return Ok(expenses);
+        }
+
+        // GET: api/User/{userId}/GetExpensesForDateRange
+        [HttpGet("{userId}/GetExpensesForDateRange")]
+        public async Task<ActionResult<IEnumerable<Expense>>> GetExpensesForDateRange(int userId, DateTime startDate, DateTime endDate)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Expenses)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var expenses = user.FinancialSummary.Expenses
+                .Where(e => e.DateIncurred >= startDate && e.DateIncurred <= endDate)
+                .OrderByDescending(i => i.DateIncurred);
+            return Ok(expenses);
+        }
+
+        // GET: api/User/{userId}/GetExpense/{expenseId}
+        [HttpGet("{userId}/GetExpense/{expenseId}")]
+        public async Task<ActionResult<User>> GetExpense(int userId, int expenseId)
+        {
+            var user = await _context.Users
+            .Include(u => u.FinancialSummary)
+                .ThenInclude(fs => fs.Expenses)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var income = user.FinancialSummary.Expenses.FirstOrDefault(i => i.ExpenseId == expenseId);
+            if (income == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(income);
+        }
+
+        // POST: api/User/{userId}/AddExpense
+        [HttpPost("{userId}/AddExpense")]
+        public async Task<IActionResult> AddExpense(int userId, [FromBody] Expense expense)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            user.FinancialSummary ??= new FinancialSummary();
+            user.FinancialSummary.AddExpense(expense);
+            await _context.SaveChangesAsync();
+            return Ok(expense);
+        }
+
+        // PUT: api/User/{userId}/UpdateExpense/{incomeId}
+        [HttpPut("{userId}/UpdateExpense/{expenseId}")]
+        public async Task<IActionResult> UpdateExpense(int userId, int expenseId, Expense updatedExpense)
+        {
+            if (expenseId != updatedExpense.ExpenseId || userId != updatedExpense.Id)
+            {
+                return BadRequest();
+            }
+
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Expenses)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var expenseToUpdate = user.FinancialSummary.Expenses.FirstOrDefault(i => i.ExpenseId == expenseId);
+            if (expenseToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            expenseToUpdate.Amount = updatedExpense.Amount;
+            expenseToUpdate.Category = updatedExpense.Category;
+            expenseToUpdate.DateIncurred = updatedExpense.DateIncurred;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(userId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok(expenseToUpdate);
         }
 
         // GET: api/User/{userId}/GetCurrentBalance
@@ -160,7 +342,113 @@ namespace NETFinalProject.Controllers
             return true;
         }
 
-        // PUT: api/User/5
+        // GET: api/User/{userId}/GetAllTransactions
+        [HttpGet("{userId}/GetAllTransactions")]
+        public async Task<ActionResult<IEnumerable<Transaction>>> GetAllTransactions(int userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Incomes)
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Expenses)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var transactions = new List<Transaction>();
+
+            // Add all incomes
+            foreach (var income in user.FinancialSummary.Incomes)
+            {
+                transactions.Add(new Transaction
+                {
+                    Type = "Income",
+                    Id = income.IncomeId,
+                    Amount = income.Amount,
+                    Description = income.Source,
+                    Date = income.DateReceived
+                });
+            }
+
+            // Add all expenses
+            foreach (var expense in user.FinancialSummary.Expenses)
+            {
+                transactions.Add(new Transaction
+                {
+                    Type = "Expense",
+                    Id = expense.ExpenseId,
+                    Amount = -expense.Amount, // Expenses are considered negative amounts
+                    Description = expense.Category,
+                    Date = expense.DateIncurred
+                });
+            }
+
+            // Order transactions by date
+            transactions = transactions.OrderBy(t => t.Date).Reverse().ToList();
+
+            return Ok(transactions);
+        }
+
+        // GET: api/User/{userId}/GetTransactionsForDateRange
+        [HttpGet("{userId}/GetTransactionsForDateRange")]
+        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactionsForDateRange(int userId, DateTime startDate, DateTime endDate)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Incomes)
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Expenses)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var transactions = new List<Transaction>();
+
+            // Add all incomes within the date range
+            foreach (var income in user.FinancialSummary.Incomes)
+            {
+                if (income.DateReceived >= startDate && income.DateReceived <= endDate)
+                {
+                    transactions.Add(new Transaction
+                    {
+                        Type = "Income",
+                        Id = income.IncomeId,
+                        Amount = income.Amount,
+                        Description = income.Source,
+                        Date = income.DateReceived
+                    });
+                }
+            }
+
+            // Add all expenses within the date range
+            foreach (var expense in user.FinancialSummary.Expenses)
+            {
+                if (expense.DateIncurred >= startDate && expense.DateIncurred <= endDate)
+                {
+                    transactions.Add(new Transaction
+                    {
+                        Type = "Expense",
+                        Id = expense.ExpenseId,
+                        Amount = -expense.Amount, // Expenses are considered negative amounts
+                        Description = expense.Category,
+                        Date = expense.DateIncurred
+                    });
+                }
+            }
+
+            // Order transactions by date
+            transactions = transactions.OrderBy(t => t.Date).Reverse().ToList();
+
+            return Ok(transactions);
+        }
+
+        // PUT: api/User/{userId}
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{userId}")]
         public async Task<IActionResult> PutUser(int userId, User user)
@@ -203,7 +491,7 @@ namespace NETFinalProject.Controllers
             return CreatedAtAction(nameof(GetUser), new { userId = user.Id }, user);
         }
 
-        // DELETE: api/User/5
+        // DELETE: api/User/{userId}
         [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteUser(int userId)
         {
