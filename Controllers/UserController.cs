@@ -172,6 +172,41 @@ namespace NETFinalProject.Controllers
             return Ok(incomeToUpdate);
         }
 
+        // DELETE: api/User/{userId}/DeleteIncome/{incomeId}
+        [HttpDelete("{userId}/DeleteIncome/{incomeId}")]
+        public async Task<IActionResult> DeleteIncome(int userId, int incomeId)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Incomes)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var incomeToDelete = user.FinancialSummary.Incomes.FirstOrDefault(i => i.IncomeId == incomeId);
+            if (incomeToDelete == null)
+            {
+                return NotFound();
+            }
+
+            user.FinancialSummary.Incomes.Remove(incomeToDelete);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Handle exception
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+
+            return NoContent();
+        }
+
         // GET: api/User/{userId}/GetExpenses
         [HttpGet("{userId}/GetExpenses")]
         public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses(int userId)
@@ -296,6 +331,41 @@ namespace NETFinalProject.Controllers
             }
 
             return Ok(expenseToUpdate);
+        }
+
+        // DELETE: api/User/{userId}/DeleteExpense/{expenseId}
+        [HttpDelete("{userId}/DeleteExpense/{expenseId}")]
+        public async Task<IActionResult> DeleteExpense(int userId, int expenseId)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Expenses)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var expenseToDelete = user.FinancialSummary.Expenses.FirstOrDefault(e => e.ExpenseId == expenseId);
+            if (expenseToDelete == null)
+            {
+                return NotFound();
+            }
+
+            user.FinancialSummary.Expenses.Remove(expenseToDelete);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Handle exception
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+
+            return NoContent();
         }
 
         // GET: api/User/{userId}/GetCurrentBalance
