@@ -149,26 +149,16 @@ namespace NETFinalProject.Controllers
                 return NotFound();
             }
 
+            user.FinancialSummary.DeleteIncome(incomeToUpdate);
+
             incomeToUpdate.Amount = updatedIncome.Amount;
             incomeToUpdate.Source = updatedIncome.Source;
             incomeToUpdate.DateReceived = updatedIncome.DateReceived;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(userId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            user.FinancialSummary.AddIncome(updatedIncome);
+            
+            await _context.SaveChangesAsync();
+            
             return Ok(incomeToUpdate);
         }
 
@@ -191,19 +181,11 @@ namespace NETFinalProject.Controllers
             {
                 return NotFound();
             }
+            
+            user.FinancialSummary.DeleteIncome(incomeToDelete);
 
-            user.FinancialSummary.Incomes.Remove(incomeToDelete);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                // Handle exception
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-
+            await _context.SaveChangesAsync();
+            
             return NoContent();
         }
 
@@ -310,26 +292,16 @@ namespace NETFinalProject.Controllers
                 return NotFound();
             }
 
+            user.FinancialSummary.DeleteExpense(expenseToUpdate);
+
             expenseToUpdate.Amount = updatedExpense.Amount;
             expenseToUpdate.Category = updatedExpense.Category;
             expenseToUpdate.DateIncurred = updatedExpense.DateIncurred;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(userId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            user.FinancialSummary.AddExpense(updatedExpense);
+            
+            await _context.SaveChangesAsync();
+            
             return Ok(expenseToUpdate);
         }
 
@@ -353,18 +325,10 @@ namespace NETFinalProject.Controllers
                 return NotFound();
             }
 
-            user.FinancialSummary.Expenses.Remove(expenseToDelete);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                // Handle exception
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-
+            user.FinancialSummary.DeleteExpense(expenseToDelete);
+            
+            await _context.SaveChangesAsync();
+            
             return NoContent();
         }
 
@@ -372,14 +336,20 @@ namespace NETFinalProject.Controllers
         [HttpGet("{userId}/GetCurrentBalance")]
         public async Task<ActionResult<User>> GetCurrentBalance(int userId)
         {
+            decimal currentBalance = 0;
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
                 .FirstOrDefaultAsync(u => u.Id == userId);
-            if (user == null || user.FinancialSummary == null)
+            //if (user == null || user.FinancialSummary == null)
+            if (user == null)
             {
                 return NotFound();
             }
-            var currentBalance = user.FinancialSummary.GetCurrentBalance();
+            if (user.FinancialSummary != null)
+            {
+               currentBalance = user.FinancialSummary.GetCurrentBalance();
+            }
+                
             return Ok(currentBalance);
         }
 

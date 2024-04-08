@@ -32,10 +32,22 @@ namespace NETFinalProject.Models
             TotalIncome += income.Amount;
         }
 
+        public void DeleteIncome(Income income)
+        {
+            Incomes.Remove(income);
+            TotalIncome -= income.Amount;
+        }
+        
         public void AddExpense(Expense expense)
         {
             Expenses.Add(expense);
             TotalExpense += expense.Amount;
+        }
+
+        public void DeleteExpense(Expense expense)
+        {
+            Expenses.Remove(expense);
+            TotalExpense -= expense.Amount;
         }
     }
 }
