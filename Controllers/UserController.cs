@@ -528,7 +528,7 @@ namespace BackendFinance.Controllers
 
         // DELETE: api/User/{userId}
         [HttpDelete("{userId}")]
-        public async Task<IActionResult> DeleteUser(int userId)
+        public async Task<IActionResult> DeleteUser(Guid userId)
         {
             var user = await _context.Users.FindAsync(userId);
             if (user == null)

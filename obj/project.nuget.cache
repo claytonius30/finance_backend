@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dpc/CShmRDguKz/poM2xuiA6aifzd7SquzLW6SdhI5uZ/MEFJ+xQ2oU9Qe6qu6wR1vVKUyA1x53QPVxyLU937A==",
+  "dgSpecHash": "S3uGziKIcDIKH89TDfEMuoqC/7OjPVSqIPq4wsX91DL4lVYpzx3b/8TRSqtQX4mif2ADgzTYreKKODWtzzkmMA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\14064\\School Material\\Web Services\\TESTBackendFinance\\BackendFinance.csproj",
+  "projectFilePath": "C:\\gitrepos\\WebServicesFinal\\BackendFinance.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\14064\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\14064\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

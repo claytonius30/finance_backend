@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackendFinance.Migrations
 {
     [DbContext(typeof(FinanceTrackerDbContext))]
-    [Migration("20240411195045_next")]
-    partial class next
+    [Migration("20240411204629_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
