@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace NETFinalProject.Models
+namespace BackendFinance.Models
 {
     public class FinancialSummary
     {

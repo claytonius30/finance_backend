@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using BackendFinance.Data;
+using BackendFinance.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NETFinalProject.Data;
-using NETFinalProject.Models;
 
-namespace NETFinalProject.Controllers
+namespace BackendFinance.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : Controller
     {
-        private readonly FinanceContext _context;
+        private readonly FinanceTrackerDbContext _context;
 
-        public UserController(FinanceContext context)
+        public UserController(FinanceTrackerDbContext context)
         {
             _context = context;
         }
@@ -32,10 +27,10 @@ namespace NETFinalProject.Controllers
 
         // GET: api/User/{userId}
         [HttpGet("{userId}")]
-        public async Task<ActionResult<User>> GetUser(int userId)
+        public async Task<ActionResult<User>> GetUser(Guid userId)
         {
             var user = await _context.Users.FindAsync(userId);
-            
+
 
             if (user == null)
             {
@@ -47,7 +42,7 @@ namespace NETFinalProject.Controllers
 
         // GET: api/User/{userId}/GetIncomes
         [HttpGet("{userId}/GetIncomes")]
-        public async Task<ActionResult<IEnumerable<Income>>> GetIncomes(int userId)
+        public async Task<ActionResult<IEnumerable<Income>>> GetIncomes(Guid userId)
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
@@ -65,7 +60,7 @@ namespace NETFinalProject.Controllers
 
         // GET: api/User/{userId}/GetIncomesForDateRange
         [HttpGet("{userId}/GetIncomesForDateRange")]
-        public async Task<ActionResult<IEnumerable<Income>>> GetIncomesForDateRange(int userId, DateTime startDate, DateTime endDate)
+        public async Task<ActionResult<IEnumerable<Income>>> GetIncomesForDateRange(Guid userId, DateTime startDate, DateTime endDate)
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
@@ -85,7 +80,7 @@ namespace NETFinalProject.Controllers
 
         // GET: api/User/{userId}/GetIncome/{incomeId}
         [HttpGet("{userId}/GetIncome/{incomeId}")]
-        public async Task<ActionResult<User>> GetIncome(int userId, int incomeId)
+        public async Task<ActionResult<User>> GetIncome(Guid userId, int incomeId)
         {
             var user = await _context.Users
             .Include(u => u.FinancialSummary)
@@ -108,7 +103,7 @@ namespace NETFinalProject.Controllers
 
         // POST: api/User/{userId}/AddIncome
         [HttpPost("{userId}/AddIncome")]
-        public async Task<IActionResult> AddIncome(int userId, [FromBody] Income income)
+        public async Task<IActionResult> AddIncome(Guid userId, [FromBody] Income income)
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
@@ -126,7 +121,7 @@ namespace NETFinalProject.Controllers
 
         // PUT: api/User/{userId}/UpdateIncome/{incomeId}
         [HttpPut("{userId}/UpdateIncome/{incomeId}")]
-        public async Task<IActionResult> UpdateIncome(int userId, int incomeId, Income updatedIncome)
+        public async Task<IActionResult> UpdateIncome(Guid userId, int incomeId, Income updatedIncome)
         {
             if (incomeId != updatedIncome.IncomeId || userId != updatedIncome.Id)
             {
@@ -156,15 +151,15 @@ namespace NETFinalProject.Controllers
             incomeToUpdate.DateReceived = updatedIncome.DateReceived;
 
             user.FinancialSummary.AddIncome(updatedIncome);
-            
+
             await _context.SaveChangesAsync();
-            
+
             return Ok(incomeToUpdate);
         }
 
         // DELETE: api/User/{userId}/DeleteIncome/{incomeId}
         [HttpDelete("{userId}/DeleteIncome/{incomeId}")]
-        public async Task<IActionResult> DeleteIncome(int userId, int incomeId)
+        public async Task<IActionResult> DeleteIncome(Guid userId, int incomeId)
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
@@ -181,17 +176,17 @@ namespace NETFinalProject.Controllers
             {
                 return NotFound();
             }
-            
+
             user.FinancialSummary.DeleteIncome(incomeToDelete);
 
             await _context.SaveChangesAsync();
-            
+
             return NoContent();
         }
 
         // GET: api/User/{userId}/GetExpenses
         [HttpGet("{userId}/GetExpenses")]
-        public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses(int userId)
+        public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses(Guid userId)
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
@@ -209,7 +204,7 @@ namespace NETFinalProject.Controllers
 
         // GET: api/User/{userId}/GetExpensesForDateRange
         [HttpGet("{userId}/GetExpensesForDateRange")]
-        public async Task<ActionResult<IEnumerable<Expense>>> GetExpensesForDateRange(int userId, DateTime startDate, DateTime endDate)
+        public async Task<ActionResult<IEnumerable<Expense>>> GetExpensesForDateRange(Guid userId, DateTime startDate, DateTime endDate)
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
@@ -229,7 +224,7 @@ namespace NETFinalProject.Controllers
 
         // GET: api/User/{userId}/GetExpense/{expenseId}
         [HttpGet("{userId}/GetExpense/{expenseId}")]
-        public async Task<ActionResult<User>> GetExpense(int userId, int expenseId)
+        public async Task<ActionResult<User>> GetExpense(Guid userId, int expenseId)
         {
             var user = await _context.Users
             .Include(u => u.FinancialSummary)
@@ -252,7 +247,7 @@ namespace NETFinalProject.Controllers
 
         // POST: api/User/{userId}/AddExpense
         [HttpPost("{userId}/AddExpense")]
-        public async Task<IActionResult> AddExpense(int userId, [FromBody] Expense expense)
+        public async Task<IActionResult> AddExpense(Guid userId, [FromBody] Expense expense)
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
@@ -269,7 +264,7 @@ namespace NETFinalProject.Controllers
 
         // PUT: api/User/{userId}/UpdateExpense/{incomeId}
         [HttpPut("{userId}/UpdateExpense/{expenseId}")]
-        public async Task<IActionResult> UpdateExpense(int userId, int expenseId, Expense updatedExpense)
+        public async Task<IActionResult> UpdateExpense(Guid userId, int expenseId, Expense updatedExpense)
         {
             if (expenseId != updatedExpense.ExpenseId || userId != updatedExpense.Id)
             {
@@ -299,15 +294,15 @@ namespace NETFinalProject.Controllers
             expenseToUpdate.DateIncurred = updatedExpense.DateIncurred;
 
             user.FinancialSummary.AddExpense(updatedExpense);
-            
+
             await _context.SaveChangesAsync();
-            
+
             return Ok(expenseToUpdate);
         }
 
         // DELETE: api/User/{userId}/DeleteExpense/{expenseId}
         [HttpDelete("{userId}/DeleteExpense/{expenseId}")]
-        public async Task<IActionResult> DeleteExpense(int userId, int expenseId)
+        public async Task<IActionResult> DeleteExpense(Guid userId, int expenseId)
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
@@ -326,15 +321,15 @@ namespace NETFinalProject.Controllers
             }
 
             user.FinancialSummary.DeleteExpense(expenseToDelete);
-            
+
             await _context.SaveChangesAsync();
-            
+
             return NoContent();
         }
 
         // GET: api/User/{userId}/GetCurrentBalance
         [HttpGet("{userId}/GetCurrentBalance")]
-        public async Task<ActionResult<User>> GetCurrentBalance(int userId)
+        public async Task<ActionResult<User>> GetCurrentBalance(Guid userId)
         {
             decimal currentBalance = 0;
             var user = await _context.Users
@@ -347,15 +342,15 @@ namespace NETFinalProject.Controllers
             }
             if (user.FinancialSummary != null)
             {
-               currentBalance = user.FinancialSummary.GetCurrentBalance();
+                currentBalance = user.FinancialSummary.GetCurrentBalance();
             }
-                
+
             return Ok(currentBalance);
         }
 
         // GET: api/User/{userId}/GetBalanceForDateRange
         [HttpGet("{userId}/GetBalanceForDateRange")]
-        public async Task<ActionResult<User>> GetBalanceForDateRange(int userId, DateTime startDate, DateTime endDate)
+        public async Task<ActionResult<User>> GetBalanceForDateRange(Guid userId, DateTime startDate, DateTime endDate)
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
@@ -370,7 +365,7 @@ namespace NETFinalProject.Controllers
 
         // GET: api/User/{userId}/CheckFinancialSummary
         [HttpGet("{userId}/CheckFinancialSummary")]
-        public async Task<bool> CheckFinancialSummary(int userId)
+        public async Task<bool> CheckFinancialSummary(Guid userId)
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
@@ -384,7 +379,7 @@ namespace NETFinalProject.Controllers
 
         // GET: api/User/{userId}/GetAllTransactions
         [HttpGet("{userId}/GetAllTransactions")]
-        public async Task<ActionResult<IEnumerable<Transaction>>> GetAllTransactions(int userId)
+        public async Task<ActionResult<IEnumerable<Transaction>>> GetAllTransactions(Guid userId)
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
@@ -434,7 +429,7 @@ namespace NETFinalProject.Controllers
 
         // GET: api/User/{userId}/GetTransactionsForDateRange
         [HttpGet("{userId}/GetTransactionsForDateRange")]
-        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactionsForDateRange(int userId, DateTime startDate, DateTime endDate)
+        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactionsForDateRange(Guid userId, DateTime startDate, DateTime endDate)
         {
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
@@ -491,7 +486,7 @@ namespace NETFinalProject.Controllers
         // PUT: api/User/{userId}
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{userId}")]
-        public async Task<IActionResult> PutUser(int userId, User user)
+        public async Task<IActionResult> PutUser(Guid userId, User user)
         {
             if (userId != user.Id)
             {
@@ -547,7 +542,7 @@ namespace NETFinalProject.Controllers
             return NoContent();
         }
 
-        private bool UserExists(int userId)
+        private bool UserExists(Guid userId)
         {
             return _context.Users.Any(e => e.Id == userId);
         }

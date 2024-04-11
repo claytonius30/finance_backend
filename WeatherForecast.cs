@@ -1,4 +1,4 @@
-namespace NETFinalProject
+namespace BackendFinance
 {
     public class WeatherForecast
     {

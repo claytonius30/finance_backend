@@ -1,4 +1,4 @@
-﻿namespace NETFinalProject.Models
+﻿namespace BackendFinance.Models
 {
     public class Transaction
     {

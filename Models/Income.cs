@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NETFinalProject.Models
+namespace BackendFinance.Models
 {
     public class Income
     {
@@ -23,7 +23,7 @@ namespace NETFinalProject.Models
         [Display(Name = "Date Received")]
         public DateTime DateReceived { get; set; }
         
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public override string ToString()
         {
