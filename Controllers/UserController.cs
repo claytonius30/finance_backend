@@ -16,6 +16,28 @@ namespace BackendFinance.Controllers
             _context = context;
         }
 
+        // GET: api/User/{email}/GetGuid
+        [HttpGet("{email}/GetGuid")]
+        public async Task<ActionResult<Guid>> GetGuid(string email)
+        {
+            Guid userId;
+            //var userToken = await _context.UserTokens
+            //    .SingleOrDefaultAsync(u => u.Value == token);
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == email);
+            //if (user == null || user.FinancialSummary == null)
+            if (user == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                userId = user.Id;
+            }
+
+            return Ok(userId);
+        }
+
         // GET: api/User
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
@@ -370,7 +392,7 @@ namespace BackendFinance.Controllers
             var user = await _context.Users
                 .Include(u => u.FinancialSummary)
                 .FirstOrDefaultAsync(u => u.Id == userId);
-            if (user.FinancialSummary == null)
+            if (user?.FinancialSummary == null)
             {
                 return false;
             }
