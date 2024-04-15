@@ -21,11 +21,8 @@ namespace BackendFinance.Controllers
         public async Task<ActionResult<Guid>> GetGuid(string email)
         {
             Guid userId;
-            //var userToken = await _context.UserTokens
-            //    .SingleOrDefaultAsync(u => u.Value == token);
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == email);
-            //if (user == null || user.FinancialSummary == null)
             if (user == null)
             {
                 return NotFound();
@@ -515,7 +512,21 @@ namespace BackendFinance.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            var existingUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            existingUser.FirstName = user.FirstName;
+            existingUser.LastName = user.LastName;
+
+
+            await _context.SaveChangesAsync();
+
+            //_context.Entry(user).State = EntityState.Modified;
 
             try
             {
@@ -534,7 +545,7 @@ namespace BackendFinance.Controllers
             }
 
             //return NoContent();
-            return Ok(user);
+            return Ok(existingUser);
         }
 
         // POST: api/User
