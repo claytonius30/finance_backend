@@ -73,7 +73,7 @@ namespace BackendFinance.Controllers
                 return NotFound();
             }
 
-            var incomes = user.FinancialSummary.Incomes.OrderByDescending(i => i.DateReceived);
+            var incomes = user.FinancialSummary.Incomes.OrderBy(i => i.DateReceived);
             return Ok(incomes);
         }
 
@@ -217,7 +217,7 @@ namespace BackendFinance.Controllers
                 return NotFound();
             }
 
-            var expenses = user.FinancialSummary.Expenses.OrderByDescending(i => i.DateIncurred);
+            var expenses = user.FinancialSummary.Expenses.OrderBy(i => i.DateIncurred);
             return Ok(expenses);
         }
 
@@ -414,7 +414,7 @@ namespace BackendFinance.Controllers
 
             var transactions = new List<Transaction>();
 
-            // Add all incomes
+            // Adds all incomes
             foreach (var income in user.FinancialSummary.Incomes)
             {
                 transactions.Add(new Transaction
@@ -427,7 +427,7 @@ namespace BackendFinance.Controllers
                 });
             }
 
-            // Add all expenses
+            // Adds all expenses
             foreach (var expense in user.FinancialSummary.Expenses)
             {
                 transactions.Add(new Transaction
@@ -440,8 +440,8 @@ namespace BackendFinance.Controllers
                 });
             }
 
-            // Order transactions by date
-            transactions = transactions.OrderBy(t => t.Date).Reverse().ToList();
+            // Orders transactions by date
+            transactions = transactions.OrderBy(t => t.Date).ToList();
 
             return Ok(transactions);
         }
@@ -467,7 +467,7 @@ namespace BackendFinance.Controllers
             // Add all incomes within the date range
             foreach (var income in user.FinancialSummary.Incomes)
             {
-                if (income.DateReceived >= startDate && income.DateReceived <= endDate)
+                if (income.DateReceived >= startDate && income.DateReceived <= endDate.AddDays(1))
                 {
                     transactions.Add(new Transaction
                     {
@@ -483,7 +483,7 @@ namespace BackendFinance.Controllers
             // Add all expenses within the date range
             foreach (var expense in user.FinancialSummary.Expenses)
             {
-                if (expense.DateIncurred >= startDate && expense.DateIncurred <= endDate)
+                if (expense.DateIncurred >= startDate && expense.DateIncurred <= endDate.AddDays(1))
                 {
                     transactions.Add(new Transaction
                     {
@@ -497,7 +497,7 @@ namespace BackendFinance.Controllers
             }
 
             // Order transactions by date
-            transactions = transactions.OrderBy(t => t.Date).Reverse().ToList();
+            transactions = transactions.OrderBy(t => t.Date).ToList();
 
             return Ok(transactions);
         }
