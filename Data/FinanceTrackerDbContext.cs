@@ -10,6 +10,7 @@ namespace BackendFinance.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Income> Incomes { get; set; }
         public DbSet<Expense> Expenses { get; set; }
+        public DbSet<Goal> Goals { get; set; }
 
         public FinanceTrackerDbContext(DbContextOptions options) : base(options)
         {
@@ -22,11 +23,17 @@ namespace BackendFinance.Data
             modelBuilder.Entity<User>()
                 .HasKey(u => u.Id);
 
+            //modelBuilder.Entity<User>()
+            //    .HasMany(g => g.Goals)
+            //    .WithOne(ug => ug.User)
+            //    .HasForeignKey(fk => fk.Id);
+
             modelBuilder.Entity<User>()
                 .OwnsOne(u => u.FinancialSummary, fs =>
                 {
                     fs.Property<decimal>("TotalIncome").HasColumnType("decimal(18,2)");
                     fs.Property<decimal>("TotalExpense").HasColumnType("decimal(18,2)");
+                    
 
                     fs.OwnsMany(f => f.Incomes, income =>
                     {
@@ -41,7 +48,23 @@ namespace BackendFinance.Data
                         expense.ToTable("Expenses"); // Specify the name of the table for Expenses if needed
                         expense.Property<decimal>("Amount").HasColumnType("decimal(18,2)");
                     });
+
+                    fs.OwnsMany(f => f.Goals, goal =>
+                    {
+                        goal.WithOwner().HasForeignKey("Id");
+                        goal.ToTable("Goals");
+                        goal.Property<decimal>("Amount").HasColumnType("decimal(18,2)");
+                    });
                 });
+
+            //modelBuilder.Entity<Goal>()
+            //    .HasOne(g => g.User)
+            //    .WithMany(u => u.Goals);
+            //    .HasForeignKey(g => g.Id);
+
+            //modelBuilder.Entity<Goal>()
+            //    .Property(g => g.Amount)
+            //    .HasColumnType("decimal(18, 2)");
 
             //IList<User> userList = new List<User>();
             //userList.Add(new User() { Id = 1, FirstName = "Rick", LastName = "Johnson" });

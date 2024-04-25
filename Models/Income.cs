@@ -10,7 +10,7 @@ namespace BackendFinance.Models
         public int IncomeId { get; set; }
 
         [Required(ErrorMessage = "Income source is required.")]
-        [StringLength(255)]
+        [StringLength(50)]
         [Display(Name = "Income Source")]
         public string Source { get; set; }
 

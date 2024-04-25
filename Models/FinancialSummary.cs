@@ -12,6 +12,8 @@ namespace BackendFinance.Models
 
         public virtual List<Income> Incomes { get; set; } = new List<Income>();
         public virtual List<Expense> Expenses { get; set; } = new List<Expense>();
+        public virtual List<Goal> Goals { get; set; } = new List<Goal>();
+
 
         public decimal GetCurrentBalance()
         {
@@ -48,6 +50,16 @@ namespace BackendFinance.Models
         {
             Expenses.Remove(expense);
             TotalExpense -= expense.Amount;
+        }
+
+        public void AddGoal(Goal goal)
+        {
+            Goals.Add(goal);
+        }
+
+        public void DeleteGoal(Goal goal)
+        {
+            Goals.Remove(goal);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace BackendFinance.Models
         public int ExpenseId { get; set; }
 
         [Required(ErrorMessage = "Expense category is required.")]
-        [StringLength(255)]
+        [StringLength(50)]
         [Display(Name = "Expense Category")]
         public string Category { get; set; }
 

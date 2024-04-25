@@ -102,9 +102,9 @@ namespace BackendFinance.Controllers
         public async Task<ActionResult<User>> GetIncome(Guid userId, int incomeId)
         {
             var user = await _context.Users
-            .Include(u => u.FinancialSummary)
-                .ThenInclude(fs => fs.Incomes)
-            .FirstOrDefaultAsync(u => u.Id == userId);
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Incomes)
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null || user.FinancialSummary == null)
             {
@@ -246,22 +246,22 @@ namespace BackendFinance.Controllers
         public async Task<ActionResult<User>> GetExpense(Guid userId, int expenseId)
         {
             var user = await _context.Users
-            .Include(u => u.FinancialSummary)
-                .ThenInclude(fs => fs.Expenses)
-            .FirstOrDefaultAsync(u => u.Id == userId);
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Expenses)
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null || user.FinancialSummary == null)
             {
                 return NotFound();
             }
 
-            var income = user.FinancialSummary.Expenses.FirstOrDefault(i => i.ExpenseId == expenseId);
-            if (income == null)
+            var expense = user.FinancialSummary.Expenses.FirstOrDefault(i => i.ExpenseId == expenseId);
+            if (expense == null)
             {
                 return NotFound();
             }
 
-            return Ok(income);
+            return Ok(expense);
         }
 
         // POST: api/User/{userId}/AddExpense
@@ -340,6 +340,129 @@ namespace BackendFinance.Controllers
             }
 
             user.FinancialSummary.DeleteExpense(expenseToDelete);
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // GET: api/User/{userId}/GetGoals
+        [HttpGet("{userId}/GetGoals")]
+        public async Task<ActionResult<IEnumerable<Goal>>> GetGoals(Guid userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Goals)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var goals = user.FinancialSummary.Goals.OrderBy(i => i.Date);
+            return Ok(goals);
+        }
+
+        // GET: api/User/{userId}/GetGoal/{goalId}
+        [HttpGet("{userId}/GetGoal/{goalId}")]
+        public async Task<ActionResult<User>> GetGoal(Guid userId, int goalId)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Goals)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var goal = user.FinancialSummary.Goals.FirstOrDefault(i => i.GoalId == goalId);
+            if (goal == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(goal);
+        }
+
+        // POST: api/User/{userId}/AddGoal
+        [HttpPost("{userId}/AddGoal")]
+        public async Task<IActionResult> AddGoal(Guid userId, [FromBody] Goal goal)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            user.FinancialSummary ??= new FinancialSummary();
+            user.FinancialSummary.AddGoal(goal);
+            await _context.SaveChangesAsync();
+            return Ok(goal);
+        }
+
+        // PUT: api/User/{userId}/UpdateGoal/{goalId}
+        [HttpPut("{userId}/UpdateGoal/{goalId}")]
+        public async Task<IActionResult> UpdateGoal(Guid userId, int goalId, Goal updatedGoal)
+        {
+            if (goalId != updatedGoal.GoalId || userId != updatedGoal.Id)
+            {
+                return BadRequest();
+            }
+
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Goals)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var goalToUpdate = user.FinancialSummary.Goals.FirstOrDefault(i => i.GoalId == goalId);
+            if (goalToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            user.FinancialSummary.DeleteGoal(goalToUpdate);
+
+            goalToUpdate.Date = updatedGoal.Date;
+            goalToUpdate.Amount = updatedGoal.Amount;
+            goalToUpdate.Description = updatedGoal.Description;
+
+            user.FinancialSummary.AddGoal(updatedGoal);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(goalToUpdate);
+        }
+
+        // DELETE: api/User/{userId}/DeleteGoal/{goalId}
+        [HttpDelete("{userId}/DeleteGoal/{goalId}")]
+        public async Task<IActionResult> DeleteGoal(Guid userId, int goalId)
+        {
+            var user = await _context.Users
+                .Include(u => u.FinancialSummary)
+                    .ThenInclude(fs => fs.Goals)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.FinancialSummary == null)
+            {
+                return NotFound();
+            }
+
+            var goalToDelete = user.FinancialSummary.Goals.FirstOrDefault(e => e.GoalId == goalId);
+            if (goalToDelete == null)
+            {
+                return NotFound();
+            }
+
+            user.FinancialSummary.DeleteGoal(goalToDelete);
 
             await _context.SaveChangesAsync();
 

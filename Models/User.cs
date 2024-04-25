@@ -9,12 +9,12 @@ namespace BackendFinance.Models
         //public Guid Id { get; set; }
 
         //[Required(ErrorMessage = "First name is required.")]
-        [StringLength(255)]
+        [StringLength(50)]
         [Display(Name = "First Name")]
         public string? FirstName { get; set; }
 
         //[Required(ErrorMessage = "Last name is required.")]
-        [StringLength(255)]
+        [StringLength(50)]
         [Display(Name = "Last Name")]
         public string? LastName { get; set; }
 
