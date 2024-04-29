@@ -75,13 +75,33 @@ namespace BackendFinance.Models
             }
         }
 
+        public DateTime GetEarliestDate()
+        {
+            DateTime earliestIncomeDate = Incomes.Select(i => i.DateReceived).DefaultIfEmpty(DateTime.MaxValue).Min();
+            DateTime earliestExpenseDate = Expenses.Select(e => e.DateIncurred).DefaultIfEmpty(DateTime.MaxValue).Min();
+
+            DateTime earliestDate = DateTime.MaxValue;
+
+            if (earliestIncomeDate != DateTime.MaxValue)
+            {
+                earliestDate = earliestIncomeDate;
+            }
+
+            if (earliestExpenseDate != DateTime.MaxValue && earliestExpenseDate < earliestDate)
+            {
+                earliestDate = earliestExpenseDate;
+            }
+
+            return earliestDate;
+        }
+
         public string SetGoalStatus(Goal goal)
         {
             DateTime currentDate = DateTime.Now;
 
             if (goal.GoalDate <= currentDate)
             {
-                decimal goalDifference = GetBalanceForDateRange(goal.SetDate, goal.GoalDate) - goal.Amount;
+                decimal goalDifference = GetBalanceForDateRange(GetEarliestDate(), goal.GoalDate) - goal.Amount;
 
                 if (goalDifference >= 0)
                 {
