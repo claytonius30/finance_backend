@@ -1,4 +1,9 @@
-﻿using Microsoft.Identity.Client;
+﻿// Clayton DeSimone
+// Web Services
+// Final Project
+// 4/29/2024
+
+using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
 
 namespace BackendFinance.Models

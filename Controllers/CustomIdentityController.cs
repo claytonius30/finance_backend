@@ -1,4 +1,9 @@
-﻿using BackendFinance.Data;
+﻿// Clayton DeSimone
+// Web Services
+// Final Project
+// 4/29/2024
+
+using BackendFinance.Data;
 using BackendFinance.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

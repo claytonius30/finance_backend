@@ -1,3 +1,8 @@
+// Clayton DeSimone
+// Web Services
+// Final Project
+// 4/29/2024
+
 using BackendFinance.Data;
 using BackendFinance.Models;
 using Microsoft.AspNetCore.Identity;
@@ -5,8 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -16,11 +19,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<FinanceTrackerDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddAuthentication();
 
-
-
 builder.Services.AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<FinanceTrackerDbContext>();
-
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -34,7 +34,6 @@ builder.Services.AddSwaggerGen(options =>
 // Ending..
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

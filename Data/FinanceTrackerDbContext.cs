@@ -1,4 +1,9 @@
-﻿using BackendFinance.Models;
+﻿// Clayton DeSimone
+// Web Services
+// Final Project
+// 4/29/2024
+
+using BackendFinance.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -23,11 +28,6 @@ namespace BackendFinance.Data
             modelBuilder.Entity<User>()
                 .HasKey(u => u.Id);
 
-            //modelBuilder.Entity<User>()
-            //    .HasMany(g => g.Goals)
-            //    .WithOne(ug => ug.User)
-            //    .HasForeignKey(fk => fk.Id);
-
             modelBuilder.Entity<User>()
                 .OwnsOne(u => u.FinancialSummary, fs =>
                 {
@@ -37,15 +37,16 @@ namespace BackendFinance.Data
 
                     fs.OwnsMany(f => f.Incomes, income =>
                     {
-                        income.WithOwner().HasForeignKey("Id"); // Configure as owned property
-                        income.ToTable("Incomes"); // Specify the name of the table for Incomes if needed
+                        // Configured as owned property
+                        income.WithOwner().HasForeignKey("Id"); 
+                        income.ToTable("Incomes");
                         income.Property<decimal>("Amount").HasColumnType("decimal(18,2)");
                     });
 
                     fs.OwnsMany(f => f.Expenses, expense =>
                     {
-                        expense.WithOwner().HasForeignKey("Id"); // Configure as owned property
-                        expense.ToTable("Expenses"); // Specify the name of the table for Expenses if needed
+                        expense.WithOwner().HasForeignKey("Id");
+                        expense.ToTable("Expenses");
                         expense.Property<decimal>("Amount").HasColumnType("decimal(18,2)");
                     });
 
@@ -56,22 +57,6 @@ namespace BackendFinance.Data
                         goal.Property<decimal>("Amount").HasColumnType("decimal(18,2)");
                     });
                 });
-
-            //modelBuilder.Entity<Goal>()
-            //    .HasOne(g => g.User)
-            //    .WithMany(u => u.Goals);
-            //    .HasForeignKey(g => g.Id);
-
-            //modelBuilder.Entity<Goal>()
-            //    .Property(g => g.Amount)
-            //    .HasColumnType("decimal(18, 2)");
-
-            //IList<User> userList = new List<User>();
-            //userList.Add(new User() { Id = 1, FirstName = "Rick", LastName = "Johnson" });
-            //userList.Add(new User() { Id = 2, FirstName = "Sally", LastName = "Smith" });
-            //userList.Add(new User() { Id = 3, FirstName = "Frank", LastName = "Laslow" });
-
-            //modelBuilder.Entity<User>().HasData(userList);
         }
     }
 }

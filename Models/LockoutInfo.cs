@@ -1,4 +1,9 @@
-﻿namespace BackendFinance.Models
+﻿// Clayton DeSimone
+// Web Services
+// Final Project
+// 4/29/2024
+
+namespace BackendFinance.Models
 {
     public class LockoutInfo
     {

@@ -1,4 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// Clayton DeSimone
+// Web Services
+// Final Project
+// 4/29/2024
+
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
@@ -76,8 +81,6 @@ namespace BackendFinance.Models
 
             if (goal.GoalDate <= currentDate)
             {
-                //decimal goalDifference = CurrentBalance - goal.Amount;
-
                 decimal goalDifference = GetBalanceForDateRange(goal.SetDate, goal.GoalDate) - goal.Amount;
 
                 if (goalDifference >= 0)

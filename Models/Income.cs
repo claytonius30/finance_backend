@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Clayton DeSimone
+// Web Services
+// Final Project
+// 4/29/2024
+
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
