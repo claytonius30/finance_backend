@@ -360,7 +360,7 @@ namespace BackendFinance.Controllers
                 return NotFound();
             }
 
-            var goals = user.FinancialSummary.Goals.OrderBy(i => i.Date);
+            var goals = user.FinancialSummary.Goals.OrderBy(i => i.GoalDate);
             user.FinancialSummary.SetGoalsStatus();
             await _context.SaveChangesAsync();
             return Ok(goals);
@@ -432,9 +432,11 @@ namespace BackendFinance.Controllers
                 return NotFound();
             }
 
+            
             user.FinancialSummary.DeleteGoal(goalToUpdate);
 
-            goalToUpdate.Date = updatedGoal.Date;
+            updatedGoal.Status = "In progress";
+            goalToUpdate.GoalDate = updatedGoal.GoalDate;
             goalToUpdate.Amount = updatedGoal.Amount;
             goalToUpdate.Description = updatedGoal.Description;
             goalToUpdate.Status = user.FinancialSummary.SetGoalStatus(updatedGoal);

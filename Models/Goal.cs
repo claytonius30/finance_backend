@@ -8,10 +8,14 @@ namespace BackendFinance.Models
         [Key]
         public int GoalId { get; set; }
 
+        [DataType(DataType.Date)]
+        [Display(Name = "Date Set")]
+        public DateTime SetDate { get; set; } = DateTime.Now;
+
         [Required(ErrorMessage = "Goal date is required.")]
         [DataType(DataType.Date)]
         [Display(Name = "Goal Date")]
-        public DateTime Date { get; set; }
+        public DateTime GoalDate { get; set; }
 
         [Required(ErrorMessage = "Amount is required.")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than 0.")]

@@ -290,16 +290,19 @@ namespace BackendFinance.Migrations
                                     b2.Property<decimal>("Amount")
                                         .HasColumnType("decimal(18,2)");
 
-                                    b2.Property<DateTime>("Date")
-                                        .HasColumnType("datetime2");
-
                                     b2.Property<string>("Description")
                                         .IsRequired()
                                         .HasMaxLength(50)
                                         .HasColumnType("nvarchar(50)");
 
+                                    b2.Property<DateTime>("GoalDate")
+                                        .HasColumnType("datetime2");
+
                                     b2.Property<Guid>("Id")
                                         .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<DateTime>("SetDate")
+                                        .HasColumnType("datetime2");
 
                                     b2.Property<string>("Status")
                                         .IsRequired()

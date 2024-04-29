@@ -54,7 +54,8 @@ namespace BackendFinance.Models
 
         public void AddGoal(Goal goal)
         {
-            goal.Status = "In progress";
+            //goal.Status = "In progress";
+            goal.Status = SetGoalStatus(goal);
             Goals.Add(goal);
         }
 
@@ -73,11 +74,13 @@ namespace BackendFinance.Models
 
         public string SetGoalStatus(Goal goal)
         {
-            if (goal.Date <= DateTime.Now)
-            {
-                decimal goalDifference = CurrentBalance - goal.Amount;
+            DateTime currentDate = DateTime.Now;
 
-                //decimal goalDifference = GetBalanceForDateRange(goal.Date,)
+            if (goal.GoalDate <= currentDate)
+            {
+                //decimal goalDifference = CurrentBalance - goal.Amount;
+
+                decimal goalDifference = GetBalanceForDateRange(goal.SetDate, goal.GoalDate) - goal.Amount;
 
                 if (goalDifference >= 0)
                 {
