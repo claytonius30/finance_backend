@@ -281,7 +281,7 @@ namespace BackendFinance.Controllers
             return Ok(expense);
         }
 
-        // PUT: api/User/{userId}/UpdateExpense/{incomeId}
+        // PUT: api/User/{userId}/UpdateExpense/{expenseId}
         [HttpPut("{userId}/UpdateExpense/{expenseId}")]
         public async Task<IActionResult> UpdateExpense(Guid userId, int expenseId, Expense updatedExpense)
         {

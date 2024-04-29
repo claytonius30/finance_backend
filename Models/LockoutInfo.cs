@@ -2,7 +2,7 @@
 {
     public class LockoutInfo
     {
-        public string LockoutEnd { get; set; }
-        public string LockoutRemaining { get; set; }
+        public string LockoutEnd { get; set; } = default!;
+        public string LockoutRemaining { get; set; } = default!;
     }
 }
