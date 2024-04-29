@@ -54,8 +54,6 @@ namespace BackendFinance.Models
 
         public void AddGoal(Goal goal)
         {
-            //goal.Status = "In progress";
-            goal.Status = SetGoalStatus(goal);
             Goals.Add(goal);
         }
 
