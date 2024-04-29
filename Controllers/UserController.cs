@@ -361,6 +361,7 @@ namespace BackendFinance.Controllers
             }
 
             var goals = user.FinancialSummary.Goals.OrderBy(i => i.Date);
+            user.FinancialSummary.SetGoalsStatus();
             return Ok(goals);
         }
 
@@ -383,9 +384,32 @@ namespace BackendFinance.Controllers
             {
                 return NotFound();
             }
-
+            goal.Status = user.FinancialSummary.SetGoalStatus(goal);
             return Ok(goal);
         }
+
+        //// GET: api/User/{userId}/GetGoalsStatus
+        //[HttpGet("{userId}/GetGoalsStatus/{goalId}")]
+        //public async Task<ActionResult<User>> GetGoalsStatus(Guid userId, int goalId)
+        //{
+        //    var user = await _context.Users
+        //        .Include(u => u.FinancialSummary)
+        //            .ThenInclude(fs => fs.Goals)
+        //        .FirstOrDefaultAsync(u => u.Id == userId);
+
+        //    if (user == null || user.FinancialSummary == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var goal = user.FinancialSummary.Goals.FirstOrDefault(i => i.GoalId == goalId);
+        //    if (goal == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return Ok(goal);
+        //}
 
         // POST: api/User/{userId}/AddGoal
         [HttpPost("{userId}/AddGoal")]
@@ -434,6 +458,7 @@ namespace BackendFinance.Controllers
             goalToUpdate.Date = updatedGoal.Date;
             goalToUpdate.Amount = updatedGoal.Amount;
             goalToUpdate.Description = updatedGoal.Description;
+            goalToUpdate.Status = user.FinancialSummary.SetGoalStatus(updatedGoal);
 
             user.FinancialSummary.AddGoal(updatedGoal);
 

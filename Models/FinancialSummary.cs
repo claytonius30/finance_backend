@@ -54,12 +54,42 @@ namespace BackendFinance.Models
 
         public void AddGoal(Goal goal)
         {
+            goal.Status = "In progress";
             Goals.Add(goal);
         }
 
         public void DeleteGoal(Goal goal)
         {
             Goals.Remove(goal);
+        }
+
+        public void SetGoalsStatus()
+        {
+            foreach (var goal in Goals)
+            {
+                goal.Status = SetGoalStatus(goal);
+            }
+        }
+
+        public string SetGoalStatus(Goal goal)
+        {
+            if (goal.Date <= DateTime.Now)
+            {
+                decimal goalDifference = CurrentBalance - goal.Amount;
+
+                if (goalDifference >= 0)
+                {
+                    return $"Goal met by {String.Format("${0:N2}", goalDifference)}";
+                }
+                else
+                {
+                    return $"Missed goal by {String.Format("${0:N2}", -goalDifference)}";
+                }
+            }
+            else
+            {
+                return "In progress";
+            }
         }
     }
 }

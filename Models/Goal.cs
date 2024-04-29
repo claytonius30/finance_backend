@@ -21,6 +21,8 @@ namespace BackendFinance.Models
         [StringLength(50)]
         public string Description { get; set; }
 
+        public string Status { get; set; }
+
         public Guid Id { get; set; }
     }
 }
