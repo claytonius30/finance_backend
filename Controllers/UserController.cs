@@ -93,7 +93,7 @@ namespace BackendFinance.Controllers
 
             var incomes = user.FinancialSummary.Incomes
                 .Where(i => i.DateReceived >= startDate && i.DateReceived <= endDate)
-                .OrderByDescending(i => i.DateReceived);
+                .OrderBy(i => i.DateReceived);
             return Ok(incomes);
         }
 
@@ -237,7 +237,7 @@ namespace BackendFinance.Controllers
 
             var expenses = user.FinancialSummary.Expenses
                 .Where(e => e.DateIncurred >= startDate && e.DateIncurred <= endDate)
-                .OrderByDescending(i => i.DateIncurred);
+                .OrderBy(i => i.DateIncurred);
             return Ok(expenses);
         }
 
@@ -362,6 +362,7 @@ namespace BackendFinance.Controllers
 
             var goals = user.FinancialSummary.Goals.OrderBy(i => i.Date);
             user.FinancialSummary.SetGoalsStatus();
+            await _context.SaveChangesAsync();
             return Ok(goals);
         }
 
@@ -385,31 +386,9 @@ namespace BackendFinance.Controllers
                 return NotFound();
             }
             goal.Status = user.FinancialSummary.SetGoalStatus(goal);
+            await _context.SaveChangesAsync();
             return Ok(goal);
         }
-
-        //// GET: api/User/{userId}/GetGoalsStatus
-        //[HttpGet("{userId}/GetGoalsStatus/{goalId}")]
-        //public async Task<ActionResult<User>> GetGoalsStatus(Guid userId, int goalId)
-        //{
-        //    var user = await _context.Users
-        //        .Include(u => u.FinancialSummary)
-        //            .ThenInclude(fs => fs.Goals)
-        //        .FirstOrDefaultAsync(u => u.Id == userId);
-
-        //    if (user == null || user.FinancialSummary == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var goal = user.FinancialSummary.Goals.FirstOrDefault(i => i.GoalId == goalId);
-        //    if (goal == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return Ok(goal);
-        //}
 
         // POST: api/User/{userId}/AddGoal
         [HttpPost("{userId}/AddGoal")]

@@ -77,6 +77,8 @@ namespace BackendFinance.Models
             {
                 decimal goalDifference = CurrentBalance - goal.Amount;
 
+                //decimal goalDifference = GetBalanceForDateRange(goal.Date,)
+
                 if (goalDifference >= 0)
                 {
                     return $"Goal met by {String.Format("${0:N2}", goalDifference)}";
