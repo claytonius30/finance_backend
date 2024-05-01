@@ -512,7 +512,7 @@ namespace BackendFinance.Controllers
             {
                 return NotFound();
             }
-            var dateRangeBalance = user.FinancialSummary.GetBalanceForDateRange(startDate, endDate);
+            var dateRangeBalance = user.FinancialSummary.GetBalanceForDateRange(startDate, endDate.AddDays(1));
             return Ok(dateRangeBalance);
         }
 
