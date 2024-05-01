@@ -512,7 +512,8 @@ namespace BackendFinance.Controllers
             {
                 return NotFound();
             }
-            var dateRangeBalance = user.FinancialSummary.GetBalanceForDateRange(startDate, endDate.AddDays(1));
+            //var dateRangeBalance = user.FinancialSummary.GetBalanceForDateRange(startDate, endDate.AddDays(1));
+            var dateRangeBalance = user.FinancialSummary.GetBalanceForDateRange(startDate, endDate);
             return Ok(dateRangeBalance);
         }
 
@@ -601,7 +602,8 @@ namespace BackendFinance.Controllers
             // Add all incomes within the date range
             foreach (var income in user.FinancialSummary.Incomes)
             {
-                if (income.DateReceived >= startDate && income.DateReceived <= endDate.AddDays(1))
+                //if (income.DateReceived >= startDate && income.DateReceived <= endDate.AddDays(1))
+                if (income.DateReceived >= startDate && income.DateReceived <= endDate)
                 {
                     transactions.Add(new Transaction
                     {
@@ -617,7 +619,8 @@ namespace BackendFinance.Controllers
             // Add all expenses within the date range
             foreach (var expense in user.FinancialSummary.Expenses)
             {
-                if (expense.DateIncurred >= startDate && expense.DateIncurred <= endDate.AddDays(1))
+                //if (expense.DateIncurred >= startDate && expense.DateIncurred <= endDate.AddDays(1))
+                if (expense.DateIncurred >= startDate && expense.DateIncurred <= endDate)
                 {
                     transactions.Add(new Transaction
                     {
