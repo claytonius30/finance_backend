@@ -27,8 +27,8 @@ namespace BackendFinance.Models
 
         public decimal GetBalanceForDateRange(DateTime startDate, DateTime endDate)
         {
-            var incomesInRange = Incomes.Where(i => i.DateReceived >= startDate && i.DateReceived <= endDate).ToList();
-            var expensesInRange = Expenses.Where(e => e.DateIncurred >= startDate && e.DateIncurred <= endDate).ToList();
+            var incomesInRange = Incomes.Where(i => i.DateReceived >= startDate && i.DateReceived <= endDate.AddDays(1).AddSeconds(-1)).ToList();
+            var expensesInRange = Expenses.Where(e => e.DateIncurred >= startDate && e.DateIncurred <= endDate.AddDays(1).AddSeconds(-1)).ToList();
 
             return incomesInRange.Sum(i => i.Amount) - expensesInRange.Sum(e => e.Amount);
         }

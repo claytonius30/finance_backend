@@ -97,7 +97,7 @@ namespace BackendFinance.Controllers
             }
 
             var incomes = user.FinancialSummary.Incomes
-                .Where(i => i.DateReceived >= startDate && i.DateReceived <= endDate)
+                .Where(i => i.DateReceived >= startDate && i.DateReceived <= endDate.AddDays(1).AddSeconds(-1))
                 .OrderBy(i => i.DateReceived);
             return Ok(incomes);
         }
@@ -241,7 +241,7 @@ namespace BackendFinance.Controllers
             }
 
             var expenses = user.FinancialSummary.Expenses
-                .Where(e => e.DateIncurred >= startDate && e.DateIncurred <= endDate)
+                .Where(e => e.DateIncurred >= startDate && e.DateIncurred <= endDate.AddDays(1).AddSeconds(-1))
                 .OrderBy(i => i.DateIncurred);
             return Ok(expenses);
         }
@@ -603,7 +603,7 @@ namespace BackendFinance.Controllers
             foreach (var income in user.FinancialSummary.Incomes)
             {
                 //if (income.DateReceived >= startDate && income.DateReceived <= endDate.AddDays(1))
-                if (income.DateReceived >= startDate && income.DateReceived <= endDate)
+                if (income.DateReceived >= startDate && income.DateReceived <= endDate.AddDays(1).AddSeconds(-1))
                 {
                     transactions.Add(new Transaction
                     {
@@ -620,7 +620,7 @@ namespace BackendFinance.Controllers
             foreach (var expense in user.FinancialSummary.Expenses)
             {
                 //if (expense.DateIncurred >= startDate && expense.DateIncurred <= endDate.AddDays(1))
-                if (expense.DateIncurred >= startDate && expense.DateIncurred <= endDate)
+                if (expense.DateIncurred >= startDate && expense.DateIncurred <= endDate.AddDays(1).AddSeconds(-1))
                 {
                     transactions.Add(new Transaction
                     {
